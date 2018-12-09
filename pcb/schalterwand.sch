@@ -1,4 +1,5 @@
 EESchema Schematic File Version 4
+LIBS:schalterwand-cache
 EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
@@ -116,21 +117,19 @@ $EndComp
 Wire Wire Line
 	9200 2700 9200 2800
 Text Label 8800 1800 2    50   ~ 0
-SRCLK
+SCK
 Text Label 7450 1800 2    50   ~ 0
-SRCLK
+SCK
 Text Label 6000 1800 2    50   ~ 0
-SRCLK
+SCK
 Text Label 3750 1400 2    50   ~ 0
-SRCLK
+SCK
 Text Label 7450 2100 2    50   ~ 0
-RCLK
+LATCH
 Text Label 8800 2100 2    50   ~ 0
-RCLK
+LATCH
 Text Label 6000 2100 2    50   ~ 0
-RCLK
-Text Label 3750 1600 2    50   ~ 0
-RCLK
+LATCH
 $Comp
 L power:VCC #PWR?
 U 1 1 5C0C61C5
@@ -842,9 +841,7 @@ Connection ~ 4200 4950
 Wire Wire Line
 	4200 4950 4200 5100
 Text Label 3700 3850 2    50   ~ 0
-SRCLK
-Text Label 4700 4050 0    50   ~ 0
-RCLK
+SCK
 Text Label 3700 3750 2    50   ~ 0
 Bl2
 Text Label 3700 3650 2    50   ~ 0
@@ -854,9 +851,13 @@ Bl1
 Text Label 3700 3550 2    50   ~ 0
 Bl3
 Text Label 6000 1600 2    50   ~ 0
-SER_IN
+MOSI
 Text Label 4250 1600 0    50   ~ 0
-SER_IN
+MOSI
 Text Label 3700 4550 2    50   ~ 0
-SER_IN
+MOSI
+Text Label 3750 1600 2    50   ~ 0
+LATCH
+Text Label 4700 4050 0    50   ~ 0
+LATCH
 $EndSCHEMATC
