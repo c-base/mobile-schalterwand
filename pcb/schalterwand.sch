@@ -749,7 +749,7 @@ LED7
 Text Label 7000 4700 2    50   ~ 0
 LED8
 Text Label 8250 1600 0    50   ~ 0
-LED_A
+LED_4
 Wire Wire Line
 	8550 1600 8550 2500
 Wire Wire Line
@@ -766,23 +766,23 @@ Wire Wire Line
 Wire Wire Line
 	7850 1100 8500 1100
 Text Label 8250 1700 0    50   ~ 0
-LED_B
+LED_3
 Text Label 8250 1800 0    50   ~ 0
-LED_C
+LED_8
 Text Label 8250 1900 0    50   ~ 0
-LED_D
+LED_7
 NoConn ~ 9600 2000
 NoConn ~ 9600 2100
 NoConn ~ 9600 2200
 NoConn ~ 9600 2300
 Text Label 9600 1600 0    50   ~ 0
-LED_E
+LED_2
 Text Label 9600 1800 0    50   ~ 0
-LED_G
+LED_6
 Text Label 9600 1700 0    50   ~ 0
-LED_F
-Text Label 9600 1900 0    50   ~ 0
-LED_H
+LED_5
+Text Label 9600 2000 0    50   ~ 0
+LED_1
 $Comp
 L MCU_Module:Arduino_UNO_R2 A?
 U 1 1 5C18A032
@@ -949,4 +949,5 @@ Wire Wire Line
 	4550 1600 4600 1600
 Wire Wire Line
 	4550 1900 4550 2000
+NoConn ~ 9600 1900
 $EndSCHEMATC
