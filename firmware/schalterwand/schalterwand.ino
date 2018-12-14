@@ -17,10 +17,10 @@ struct R1 {
 
 struct R2 {
   uint8_t
-  LED_A : 1,
-  LED_B : 1,
-  LED_C : 1,
-  LED_D : 1,
+  LED_4 : 1,
+  LED_3 : 1,
+  LED_8 : 1,
+  LED_7 : 1,
   Y2        : 1,
   Y3        : 1,
   Br3      : 1,
@@ -29,10 +29,11 @@ struct R2 {
 
 struct R3 {
   uint8_t
-  LED_E : 1,
-  LED_F : 1,
-  LED_G: 1,
-  LED_H: 1;
+  LED_2 : 1,
+  LED_5 : 1,
+  LED_6: 1,
+              : 1, // ???
+  LED_1: 1;
 };
 
 void setup() {
@@ -45,36 +46,35 @@ void setup() {
   pinMode(SCK, OUTPUT); // 13
 
   Serial.begin(115200);
-  SPI.begin();
-  SPI.setClockDivider(SPI_CLOCK_DIV128);
+  SPI.begin();  
 }
 
-void loop() {
+void loop() {   
   R1 r1 = {0};
   R2 r2 = {0};
   R3 r3 = {0};
 
-  r2.LED_A = 1;
-  r2.LED_B = 0;
-  r2.LED_C = 0;
-  r2.LED_D = 0;
-  r3.LED_E = 0;
-  r3.LED_F = 0;
-  r3.LED_G = 0;
-  r3.LED_H = 0;
-
-  digitalWrite(LATCH, LOW);
-  delay(10);
-
-  SPI.transfer(*reinterpret_cast<uint8_t*>(&r1));
-  delay(10);
-  SPI.transfer(*reinterpret_cast<uint8_t*>(&r2));
-  delay(10);
-  SPI.transfer(*reinterpret_cast<uint8_t*>(&r3));
-
-  delay(10);
-  digitalWrite(LATCH, LOW);
+  r3.LED_1 = 1;
+  r3.LED_2 = 0;
+  r2.LED_3 = 0;
+  r2.LED_4 = 0;
+  r3.LED_5 = 0;
+  r3.LED_6 = 0;
+  r2.LED_7 = 0;
+  r2.LED_8 = 0;
   
-  while(true)
-    ;
+  while(true) {       
+    digitalWrite(LATCH, LOW);
+    delay(100);    
+
+    SPI.transfer(*reinterpret_cast<uint8_t*>(&r3));    
+    delay(100);
+    SPI.transfer(*reinterpret_cast<uint8_t*>(&r2));
+    delay(100);
+    SPI.transfer(0);
+    delay(100);
+  
+    digitalWrite(LATCH, HIGH);  
+    delay(500);
+  }
 }
