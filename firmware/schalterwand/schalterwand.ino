@@ -94,7 +94,7 @@ Button::readSwitchPos() {
     return LEFT_OR_RIGHT;
 }
 
-const char* Button::readSwitchPosStr() {  
+const char* Button::readSwitchPosStr() {
   switch(readSwitchPos()) {
     case DOWN: return "Down";
     case UP: return "Up";
@@ -170,7 +170,7 @@ class Sw11 : public Button {
   virtual bool yellow() final override { return readYellowWire(_r2.Y3, _r2.Br3, BL3); }
 };
 
-// SW12, Y3, Br3, Bl2 
+// SW12, Y3, Br3, Bl2
 class Sw12 : public Button {
   virtual bool brown() final override { return readBrownWire(_r2.Y3, _r2.Br3, BL2); }
   virtual bool yellow() final override { return readYellowWire(_r2.Y3, _r2.Br3, BL2); }
@@ -198,70 +198,6 @@ void setup() {
 
   Serial.begin(115200);
   SPI.begin();  
-}
-
-int sw1Old() {  
-  // Brown:
-  _r1.Y1 = 0;
-  _r2.Br1 = 1;
-  xferRegisters();
-  
-  bool brown = digitalRead(BL4);
-
-  _r1.Y1 = 0;
-  _r2.Br1 = 0;// Y1, Br1, Bl4
-  xferRegisters();
-
-  // Yellow:
-  _r1.Y1 = 1;
-  _r2.Br1 = 0;
-  xferRegisters();
-  
-  bool yellow = digitalRead(BL4);
-
-  _r1.Y1 = 0;
-  _r2.Br1 = 0;
-  xferRegisters();
-
-  if(brown)
-    return DOWN;
-  else if (yellow)
-    return UP;
-  else
-    return LEFT_OR_RIGHT;
-}
-
-int sw2Old() {  
-  // Brown:
-  _r2.Y2 = 0;
-  _r1.Br2 = 1;
-  
-  xferRegisters();
-
-  bool brown = digitalRead(BL4);
-
-  _r2.Y2 = 0;
-  _r1.Br2 = 0;
-  xferRegisters();
-
-  // Yellow:
-  _r2.Y2 = 1;
-  _r1.Br2 = 0;
-  
-  xferRegisters();
-
-  bool yellow = digitalRead(BL4);
-
-  _r2.Y2 = 0;
-  _r1.Br2 = 0;
-  xferRegisters();
-
-  if(brown)
-    return DOWN;
-  else if (yellow)
-    return UP;
-  else
-    return LEFT_OR_RIGHT;  
 }
 
 void loop() {  
