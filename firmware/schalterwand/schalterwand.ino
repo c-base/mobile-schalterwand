@@ -34,12 +34,6 @@ struct {
   LED_1 : 1;
 } _r3 = {0};
 
-enum class SwitchPos {
-  LeftOrRight = 0,
-  Down = 1,
-  Up = 2,
-};
-
 void xferRegisters() {
   digitalWrite(LATCH, LOW);
   delay(10);    
@@ -55,8 +49,8 @@ void xferRegisters() {
   delay(10);
 }
 
-#define readWire(Y, Br, Bl, enY, enBr) ({  \
-  bool __wireState;                                           \
+#define readWire(Y, Br, Bl, enY, enBr) ({   \
+  bool __wireState;                                            \
   {                                                                         \
     Y = enY;                                                          \
     Br = enBr;                                                      \
@@ -75,103 +69,109 @@ void xferRegisters() {
 #define readBrownWire(Y, Br, Bl) readWire(Y, Br, Bl, 0, 1)
 #define readYellowWire(Y, Br, Bl) readWire(Y, Br, Bl, 1, 0)
 
-class Button {
+class Switch {
 public:
-  SwitchPos readSwitchPos();
-  const char* readSwitchPosStr();
+  enum class Position {
+    LeftOrRight = 0,
+    Down = 1,
+    Up = 2,
+  };
+
+  Switch::Position readPos();
+  const char* readPosStr();
   
 private:
   virtual bool brown() = 0;
   virtual bool yellow() = 0;
 };
 
-SwitchPos Button::readSwitchPos() {
+Switch::Position Switch::readPos() {
   if(brown())
-    return SwitchPos::Down;
+    return Position::Down;
   else if (yellow())
-    return SwitchPos::Up;
+    return Position::Up;
   else
-    return SwitchPos::LeftOrRight;
+    return Position::LeftOrRight;
 }
 
-const char* Button::readSwitchPosStr() {
-  switch(readSwitchPos()) {
-    case SwitchPos::Down: return "Down";
-    case SwitchPos::Up: return "Up";
-    case SwitchPos::LeftOrRight: "Left or Right";
+const char* Switch::readPosStr() {
+  switch(readPos()) {
+    case Switch::Position::Down: return "Down";
+    case Switch::Position::Up: return "Up";
+    case Switch::Position::LeftOrRight: "Left or Right";
 
     default: return "Unknown";
   }
 }
 
 // SW1:  Y1, Br1, Bl4
-class Sw1 : public Button {
+class Sw1 : public Switch {
   virtual bool brown() final override { return readBrownWire(_r1.Y1, _r2.Br1, BL4); }
   virtual bool yellow() final override { return readYellowWire(_r1.Y1, _r2.Br1, BL4); }
 };
 
 // SW2: Y2, Br2, Bl4
-class Sw2 : public Button {
+class Sw2 : public Switch {
   virtual bool brown() final override { return readBrownWire(_r2.Y2, _r1.Br2, BL4); }
   virtual bool yellow() final override { return readYellowWire(_r2.Y2, _r1.Br2, BL4); }
 };
 
 // SW3: Y2, Br2, Bl3
-class Sw3 : public Button {
+class Sw3 : public Switch {
   virtual bool brown() final override { return readBrownWire(_r2.Y2, _r1.Br2, BL3); }
   virtual bool yellow() final override { return readYellowWire(_r2.Y2, _r1.Br2, BL3); }
 };
 
 // SW4: Y1, Br1, Bl3
-class Sw4 : public Button {
+class Sw4 : public Switch {
   virtual bool brown() final override { return readBrownWire(_r1.Y1, _r2.Br1, BL3); }
   virtual bool yellow() final override { return readYellowWire(_r1.Y1, _r2.Br1, BL3); }
 };
 
 // SW5: Y1, Br1, Bl1
-class Sw5 : public Button {
+class Sw5 : public Switch {
   virtual bool brown() final override { return readBrownWire(_r1.Y1, _r2.Br1, BL1); }
   virtual bool yellow() final override { return readYellowWire(_r1.Y1, _r2.Br1, BL1); }
 };
 
 // SW6: Y2, Br2, Bl1
-class Sw6 : public Button {
+class Sw6 : public Switch {
   virtual bool brown() final override { return readBrownWire(_r2.Y2, _r1.Br2, BL1); }
   virtual bool yellow() final override { return readYellowWire(_r2.Y2, _r1.Br2, BL1); }
 };
 
 // SW7: Y2, Br2, Bl2
-class Sw7 : public Button {
+class Sw7 : public Switch {
   virtual bool brown() final override { return readBrownWire(_r2.Y2, _r1.Br2, BL2); }
   virtual bool yellow() final override { return readYellowWire(_r2.Y2, _r1.Br2, BL2); }
 };
 
 // SW8: Y1, Br1, Bl2
-class Sw8 : public Button {
+class Sw8 : public Switch {
   virtual bool brown() final override { return readBrownWire(_r1.Y1, _r2.Br1, BL2); }
   virtual bool yellow() final override { return readYellowWire(_r1.Y1, _r2.Br1, BL2); }
 };
 
 // SW9: Y3, Br3, Bl1
-class Sw9 : public Button {
+class Sw9 : public Switch {
   virtual bool brown() final override { return readBrownWire(_r2.Y3, _r2.Br3, BL1); }
   virtual bool yellow() final override { return readYellowWire(_r2.Y3, _r2.Br3, BL1); }
 };
 
 // SW10: Y3, Br3, Bl4
-class Sw10 : public Button {
+class Sw10 : public Switch {
   virtual bool brown() final override { return readBrownWire(_r2.Y3, _r2.Br3, BL4); }
   virtual bool yellow() final override { return readYellowWire(_r2.Y3, _r2.Br3, BL4); }
 };
 
 // SW11: Y3, Br3, Bl3
-class Sw11 : public Button {
+class Sw11 : public Switch {
   virtual bool brown() final override { return readBrownWire(_r2.Y3, _r2.Br3, BL3); }
   virtual bool yellow() final override { return readYellowWire(_r2.Y3, _r2.Br3, BL3); }
 };
 
 // SW12, Y3, Br3, Bl2
-class Sw12 : public Button {
+class Sw12 : public Switch {
   virtual bool brown() final override { return readBrownWire(_r2.Y3, _r2.Br3, BL2); }
   virtual bool yellow() final override { return readYellowWire(_r2.Y3, _r2.Br3, BL2); }
 };
@@ -211,17 +211,17 @@ void loop() {
   _r2.LED_8 = 0;
   
   while(true) {           
-    Serial.print("SW1: ");   Serial.print(_sw1.readSwitchPosStr());   Serial.print(", ");
-    Serial.print("SW2: ");   Serial.print(_sw2.readSwitchPosStr());   Serial.print(", ");
-    Serial.print("SW3: ");   Serial.print(_sw3.readSwitchPosStr());   Serial.print(", ");
-    Serial.print("SW4: ");   Serial.print(_sw4.readSwitchPosStr());   Serial.print(", ");
-    Serial.print("SW5: ");   Serial.print(_sw5.readSwitchPosStr());   Serial.print(", ");
-    Serial.print("SW6: ");   Serial.print(_sw6.readSwitchPosStr());   Serial.print(", ");
-    Serial.print("SW7: ");   Serial.print(_sw7.readSwitchPosStr());   Serial.print(", ");
-    Serial.print("SW8: ");   Serial.print(_sw8.readSwitchPosStr());   Serial.print(", ");
-    Serial.print("SW9: ");   Serial.print(_sw9.readSwitchPosStr());   Serial.print(", ");
-    Serial.print("SW10: "); Serial.print(_sw10.readSwitchPosStr()); Serial.print(", ");
-    Serial.print("SW11: "); Serial.print(_sw11.readSwitchPosStr()); Serial.print(", ");
-    Serial.print("SW12: "); Serial.print(_sw12.readSwitchPosStr()); Serial.print(", ");
+    Serial.print("SW1: ");   Serial.print(_sw1.readPosStr());   Serial.print(", ");
+    Serial.print("SW2: ");   Serial.print(_sw2.readPosStr());   Serial.print(", ");
+    Serial.print("SW3: ");   Serial.print(_sw3.readPosStr());   Serial.print(", ");
+    Serial.print("SW4: ");   Serial.print(_sw4.readPosStr());   Serial.print(", ");
+    Serial.print("SW5: ");   Serial.print(_sw5.readPosStr());   Serial.print(", ");
+    Serial.print("SW6: ");   Serial.print(_sw6.readPosStr());   Serial.print(", ");
+    Serial.print("SW7: ");   Serial.print(_sw7.readPosStr());   Serial.print(", ");
+    Serial.print("SW8: ");   Serial.print(_sw8.readPosStr());   Serial.print(", ");
+    Serial.print("SW9: ");   Serial.print(_sw9.readPosStr());   Serial.print(", ");
+    Serial.print("SW10: "); Serial.print(_sw10.readPosStr()); Serial.print(", ");
+    Serial.print("SW11: "); Serial.print(_sw11.readPosStr()); Serial.print(", ");
+    Serial.print("SW12: "); Serial.print(_sw12.readPosStr()); Serial.print(", ");
   }
 }
