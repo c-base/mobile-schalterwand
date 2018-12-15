@@ -34,10 +34,10 @@ struct {
   LED_1 : 1;
 } _r3 = {0};
 
-enum SwitchPos {
-  LEFT_OR_RIGHT = 0,
-  DOWN = 1,
-  UP = 2,
+enum class SwitchPos {
+  LeftOrRight = 0,
+  Down = 1,
+  Up = 2,
 };
 
 void xferRegisters() {
@@ -77,7 +77,7 @@ void xferRegisters() {
 
 class Button {
 public:
-  int readSwitchPos();
+  SwitchPos readSwitchPos();
   const char* readSwitchPosStr();
   
 private:
@@ -85,20 +85,20 @@ private:
   virtual bool yellow() = 0;
 };
 
-Button::readSwitchPos() {
+SwitchPos Button::readSwitchPos() {
   if(brown())
-    return DOWN;
+    return SwitchPos::Down;
   else if (yellow())
-    return UP;
+    return SwitchPos::Up;
   else
-    return LEFT_OR_RIGHT;
+    return SwitchPos::LeftOrRight;
 }
 
 const char* Button::readSwitchPosStr() {
   switch(readSwitchPos()) {
-    case DOWN: return "Down";
-    case UP: return "Up";
-    case LEFT_OR_RIGHT: "Left or Right";
+    case SwitchPos::Down: return "Down";
+    case SwitchPos::Up: return "Up";
+    case SwitchPos::LeftOrRight: "Left or Right";
 
     default: return "Unknown";
   }
