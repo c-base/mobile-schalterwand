@@ -251,19 +251,19 @@ typedef void (*OnSwitchPositionChange)(int id, Switch::Position pos);
 class SchalterWand {
 public:
   SchalterWand(OnSwitchPositionChange onSwitchPositionChange) :
-    onSwitchPositionChange_(onSwitchPositionChange),    
-    sw1_(&reg_),
-    sw2_(&reg_),
-    sw3_(&reg_),
-    sw4_(&reg_),
-    sw5_(&reg_),
-    sw6_(&reg_),
-    sw7_(&reg_),
-    sw8_(&reg_),
-    sw9_(&reg_),
-    sw10_(&reg_),
-    sw11_(&reg_),
-    sw12_(&reg_) {
+      onSwitchPositionChange_(onSwitchPositionChange),
+      sw1_(&reg_),
+      sw2_(&reg_),
+      sw3_(&reg_),
+      sw4_(&reg_),
+      sw5_(&reg_),
+      sw6_(&reg_),
+      sw7_(&reg_),
+      sw8_(&reg_),
+      sw9_(&reg_),
+      sw10_(&reg_),
+      sw11_(&reg_),
+      sw12_(&reg_) {
 
     Switch::Position sw1Last_ = sw1_.readPos();
     Switch::Position sw2Last_ = sw2_.readPos();
