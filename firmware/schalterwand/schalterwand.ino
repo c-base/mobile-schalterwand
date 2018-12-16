@@ -265,6 +265,18 @@ public:
     sw11_(&reg_),
     sw12_(&reg_) {
 
+    Switch::Position sw1Last_ = sw1_.readPos();
+    Switch::Position sw2Last_ = sw2_.readPos();
+    Switch::Position sw3Last_ = sw3_.readPos();
+    Switch::Position sw4Last_ = sw4_.readPos();
+    Switch::Position sw5Last_ = sw5_.readPos();
+    Switch::Position sw6Last_ = sw6_.readPos();
+    Switch::Position sw7Last_ = sw7_.readPos();
+    Switch::Position sw8Last_ = sw8_.readPos();
+    Switch::Position sw9Last_ = sw9_.readPos();
+    Switch::Position sw10Last_= sw10_.readPos();
+    Switch::Position sw11Last_= sw11_.readPos();
+    Switch::Position sw12Last_= sw12_.readPos();
   }
 
   void setLed(int id, bool enable);
@@ -283,6 +295,19 @@ public:
   Sw10 sw10_;
   Sw11 sw11_;
   Sw12 sw12_;
+
+  Switch::Position sw1Last_;
+  Switch::Position sw2Last_;
+  Switch::Position sw3Last_;
+  Switch::Position sw4Last_;
+  Switch::Position sw5Last_;
+  Switch::Position sw6Last_;
+  Switch::Position sw7Last_;
+  Switch::Position sw8Last_;
+  Switch::Position sw9Last_;
+  Switch::Position sw10Last_;
+  Switch::Position sw11Last_;
+  Switch::Position sw12Last_;
 
   Registers reg_;
   // --
@@ -305,9 +330,31 @@ void SchalterWand::setLed(int id, bool enable) {
 }
 
 void SchalterWand::readSwitches() {
-  // TODO: read all switches and call callback on state change
+  Switch::Position sw1Cur_ = sw1_.readPos();
+  Switch::Position sw2Cur_ = sw2_.readPos();
+  Switch::Position sw3Cur_ = sw3_.readPos();
+  Switch::Position sw4Cur_ = sw4_.readPos();
+  Switch::Position sw5Cur_ = sw5_.readPos();
+  Switch::Position sw6Cur_ = sw6_.readPos();
+  Switch::Position sw7Cur_ = sw7_.readPos();
+  Switch::Position sw8Cur_ = sw8_.readPos();
+  Switch::Position sw9Cur_ = sw9_.readPos();
+  Switch::Position sw10Cur_ = sw10_.readPos();
+  Switch::Position sw11Cur_ = sw11_.readPos();
+  Switch::Position sw12Cur_ = sw12_.readPos();
 
-  onSwitchPositionChange_(1, Switch::Position::Up);
+  if (sw1Cur_   != sw1Last_)   onSwitchPositionChange_(1, sw1Cur_);
+  if (sw2Cur_   != sw2Last_)   onSwitchPositionChange_(2, sw2Cur_);
+  if (sw3Cur_   != sw3Last_)   onSwitchPositionChange_(3, sw3Cur_);
+  if (sw4Cur_   != sw4Last_)   onSwitchPositionChange_(4, sw4Cur_);
+  if (sw5Cur_   != sw5Last_)   onSwitchPositionChange_(5, sw5Cur_);
+  if (sw6Cur_   != sw6Last_)   onSwitchPositionChange_(6, sw6Cur_);
+  if (sw7Cur_   != sw7Last_)   onSwitchPositionChange_(7, sw7Cur_);
+  if (sw8Cur_   != sw8Last_)   onSwitchPositionChange_(8, sw8Cur_);
+  if (sw9Cur_   != sw9Last_)   onSwitchPositionChange_(9, sw9Cur_);
+  if (sw10Cur_ != sw10Last_) onSwitchPositionChange_(10, sw10Cur_);
+  if (sw11Cur_ != sw11Last_) onSwitchPositionChange_(11, sw11Cur_);
+  if (sw12Cur_ != sw12Last_) onSwitchPositionChange_(12, sw12Cur_);
 }
 
 void onSwitchPositionChange(int id, Switch::Position pos) {
@@ -340,6 +387,8 @@ void setup() {
 }
 
 void loop() {
+  _schalterWand.readSwitches();
+
   /*
     Serial.print("SW1: ");   Serial.print(Switch::posToString(_schalterWand.sw1_.readPos()));   Serial.print(", ");
     Serial.print("SW2: ");   Serial.print(Switch::posToString(_schalterWand.sw2_.readPos()));   Serial.print(", ");
