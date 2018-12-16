@@ -11,13 +11,13 @@
   {                                                                         \
     Y = enY;                                                          \
     Br = enBr;                                                      \
-    xferRegisters();                                            \
+    pReg_->write();                                            \
                                                                             \
     __wireState = digitalRead(Bl);                   \
                                                                             \
     Y = 0;                                                              \
     Br = 0;                                                            \
-    xferRegisters();                                            \
+    pReg_->write();                                            \
   }                                                                        \
                                                                             \
   __wireState;                                                    \
@@ -55,6 +55,34 @@ struct R3 {
 };
 
 //------------------------------------------
+// Registers
+//------------------------------------------
+
+class Registers {
+public:
+  void write();
+
+  R1 r1_;
+  R2 r2_;
+  R3 r3_;
+};
+
+void Registers::write() {
+  digitalWrite(LATCH, LOW);
+  delay(10);
+
+  SPI.transfer(*reinterpret_cast<uint8_t*>(&r3_));
+  delay(10);
+  SPI.transfer(*reinterpret_cast<uint8_t*>(&r2_));
+  delay(10);
+  SPI.transfer(*reinterpret_cast<uint8_t*>(&r1_));
+  delay(10);
+
+  digitalWrite(LATCH, HIGH);
+  delay(10);
+}
+
+//------------------------------------------
 // Switch
 //------------------------------------------
 
@@ -67,37 +95,17 @@ public:
     Up,
   };
 
-  Switch(R1* pR1, R2* pR2, R3* pR3) : pR1_(pR1), pR2_(pR2), pR3_(pR3) { }
+  Switch(Registers* pReg) : pReg_(pReg) { }
   Switch::Position readPos();
   const char* readPosStr();
-  void xferRegisters();
 
 protected:
-// TODO: make private:
-  R1* const pR1_;
-  R2* const pR2_;
-  R3* const pR3_;
-// --
+  Registers* const pReg_; // TODO: make private
   
 private:
   virtual bool brown() = 0;
   virtual bool yellow() = 0;
 };
-
-void Switch::xferRegisters() {
-    digitalWrite(LATCH, LOW);
-    delay(10);    
-
-    SPI.transfer(*reinterpret_cast<uint8_t*>(pR3_));    
-    delay(10);
-    SPI.transfer(*reinterpret_cast<uint8_t*>(pR2_));
-    delay(10);
-    SPI.transfer(*reinterpret_cast<uint8_t*>(pR1_));
-    delay(10);
-    
-    digitalWrite(LATCH, HIGH);  
-    delay(10);
-  }
 
 Switch::Position Switch::readPos() {
   if(brown())
@@ -121,121 +129,121 @@ const char* Switch::readPosStr() {
 // SW1:  Y1, Br1, Bl4
 class Sw1 : public Switch {
 public:
-  Sw1(R1* pR1, R2* pR2, R3* pR3) : Switch(pR1, pR2, pR3) {}
+  Sw1(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pR1_->Y1, pR2_->Br1, BL4); }
-  virtual bool yellow() final override { return readYellowWire(pR1_->Y1, pR2_->Br1, BL4); }
+  virtual bool brown() final override { return readBrownWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL4); }
+  virtual bool yellow() final override { return readYellowWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL4); }
 };
 
 // SW2: Y2, Br2, Bl4
 class Sw2 : public Switch {
 public:
-  Sw2(R1* pR1, R2* pR2, R3* pR3) : Switch(pR1, pR2, pR3) {}
+  Sw2(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pR2_->Y2, pR1_->Br2, BL4); }
-  virtual bool yellow() final override { return readYellowWire(pR2_->Y2, pR1_->Br2, BL4); }
+  virtual bool brown() final override { return readBrownWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL4); }
+  virtual bool yellow() final override { return readYellowWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL4); }
 };
 
 // SW3: Y2, Br2, Bl3
 class Sw3 : public Switch {
 public:
-  Sw3(R1* pR1, R2* pR2, R3* pR3) : Switch(pR1, pR2, pR3) {}
+  Sw3(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pR2_->Y2, pR1_->Br2, BL3); }
-  virtual bool yellow() final override { return readYellowWire(pR2_->Y2, pR1_->Br2, BL3); }
+  virtual bool brown() final override { return readBrownWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL3); }
+  virtual bool yellow() final override { return readYellowWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL3); }
 };
 
 // SW4: Y1, Br1, Bl3
 class Sw4 : public Switch {
 public:
-  Sw4(R1* pR1, R2* pR2, R3* pR3) : Switch(pR1, pR2, pR3) {}
+  Sw4(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pR1_->Y1, pR2_->Br1, BL3); }
-  virtual bool yellow() final override { return readYellowWire(pR1_->Y1, pR2_->Br1, BL3); }
+  virtual bool brown() final override { return readBrownWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL3); }
+  virtual bool yellow() final override { return readYellowWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL3); }
 };
 
 // SW5: Y1, Br1, Bl1
 class Sw5 : public Switch {
 public:
-  Sw5(R1* pR1, R2* pR2, R3* pR3) : Switch(pR1, pR2, pR3) {}
+  Sw5(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pR1_->Y1, pR2_->Br1, BL1); }
-  virtual bool yellow() final override { return readYellowWire(pR1_->Y1, pR2_->Br1, BL1); }
+  virtual bool brown() final override { return readBrownWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL1); }
+  virtual bool yellow() final override { return readYellowWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL1); }
 };
 
 // SW6: Y2, Br2, Bl1
 class Sw6 : public Switch {
 public:
-  Sw6(R1* pR1, R2* pR2, R3* pR3) : Switch(pR1, pR2, pR3) {}
+  Sw6(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pR2_->Y2, pR1_->Br2, BL1); }
-  virtual bool yellow() final override { return readYellowWire(pR2_->Y2, pR1_->Br2, BL1); }
+  virtual bool brown() final override { return readBrownWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL1); }
+  virtual bool yellow() final override { return readYellowWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL1); }
 };
 
 // SW7: Y2, Br2, Bl2
 class Sw7 : public Switch {
 public:
-  Sw7(R1* pR1, R2* pR2, R3* pR3) : Switch(pR1, pR2, pR3) {}
+  Sw7(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pR2_->Y2, pR1_->Br2, BL2); }
-  virtual bool yellow() final override { return readYellowWire(pR2_->Y2, pR1_->Br2, BL2); }
+  virtual bool brown() final override { return readBrownWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL2); }
+  virtual bool yellow() final override { return readYellowWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL2); }
 };
 
 // SW8: Y1, Br1, Bl2
 class Sw8 : public Switch {
 public:
-  Sw8(R1* pR1, R2* pR2, R3* pR3) : Switch(pR1, pR2, pR3) {}
+  Sw8(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pR1_->Y1, pR2_->Br1, BL2); }
-  virtual bool yellow() final override { return readYellowWire(pR1_->Y1, pR2_->Br1, BL2); }
+  virtual bool brown() final override { return readBrownWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL2); }
+  virtual bool yellow() final override { return readYellowWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL2); }
 };
 
 // SW9: Y3, Br3, Bl1
 class Sw9 : public Switch {
 public:
-  Sw9(R1* pR1, R2* pR2, R3* pR3) : Switch(pR1, pR2, pR3) {}
+  Sw9(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pR2_->Y3, pR2_->Br3, BL1); }
-  virtual bool yellow() final override { return readYellowWire(pR2_->Y3, pR2_->Br3, BL1); }
+  virtual bool brown() final override { return readBrownWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL1); }
+  virtual bool yellow() final override { return readYellowWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL1); }
 };
 
 // SW10: Y3, Br3, Bl4
 class Sw10 : public Switch {
 public:
-  Sw10(R1* pR1, R2* pR2, R3* pR3) : Switch(pR1, pR2, pR3) {}
+  Sw10(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pR2_->Y3, pR2_->Br3, BL4); }
-  virtual bool yellow() final override { return readYellowWire(pR2_->Y3, pR2_->Br3, BL4); }
+  virtual bool brown() final override { return readBrownWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL4); }
+  virtual bool yellow() final override { return readYellowWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL4); }
 };
 
 // SW11: Y3, Br3, Bl3
 class Sw11 : public Switch {
 public:
-  Sw11(R1* pR1, R2* pR2, R3* pR3) : Switch(pR1, pR2, pR3) {}
+  Sw11(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pR2_->Y3, pR2_->Br3, BL3); }
-  virtual bool yellow() final override { return readYellowWire(pR2_->Y3, pR2_->Br3, BL3); }
+  virtual bool brown() final override { return readBrownWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL3); }
+  virtual bool yellow() final override { return readYellowWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL3); }
 };
 
 // SW12, Y3, Br3, Bl2
 class Sw12 : public Switch {
 public:
-  Sw12(R1* pR1, R2* pR2, R3* pR3) : Switch(pR1, pR2, pR3) {}
+  Sw12(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pR2_->Y3, pR2_->Br3, BL2); }
-  virtual bool yellow() final override { return readYellowWire(pR2_->Y3, pR2_->Br3, BL2); }
+  virtual bool brown() final override { return readBrownWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL2); }
+  virtual bool yellow() final override { return readYellowWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL2); }
 };
 
 //------------------------------------------
@@ -245,19 +253,19 @@ private:
 class SchalterWand {
 public:
   SchalterWand() :
-    sw1_(&r1_, &r2_, &r3_),
-    sw2_(&r1_, &r2_, &r3_),
-    sw3_(&r1_, &r2_, &r3_),
-    sw4_(&r1_, &r2_, &r3_),
-    sw5_(&r1_, &r2_, &r3_),
-    sw6_(&r1_, &r2_, &r3_),
-    sw7_(&r1_, &r2_, &r3_),
-    sw8_(&r1_, &r2_, &r3_),
-    sw9_(&r1_, &r2_, &r3_),
-    sw10_(&r1_, &r2_, &r3_),
-    sw11_(&r1_, &r2_, &r3_),
-    sw12_(&r1_, &r2_, &r3_) {
-  
+    sw1_(&reg_),
+    sw2_(&reg_),
+    sw3_(&reg_),
+    sw4_(&reg_),
+    sw5_(&reg_),
+    sw6_(&reg_),
+    sw7_(&reg_),
+    sw8_(&reg_),
+    sw9_(&reg_),
+    sw10_(&reg_),
+    sw11_(&reg_),
+    sw12_(&reg_) {
+
   }
 
   // TODO: make private:
@@ -274,9 +282,7 @@ public:
   Sw11 sw11_;
   Sw12 sw12_;
 
-  R1 r1_;  
-  R2 r2_;
-  R3 r3_;
+  Registers reg_;
   // --
   
 private:  
@@ -297,14 +303,14 @@ void setup() {
 SchalterWand _schalterWand;
 
 void loop() {
-  _schalterWand.r3_.LED_1 = 1;
-  _schalterWand.r3_.LED_2 = 0;
-  _schalterWand.r2_.LED_3 = 0;
-  _schalterWand.r2_.LED_4 = 0;
-  _schalterWand.r3_.LED_5 = 0;
-  _schalterWand.r3_.LED_6 = 0;
-  _schalterWand.r2_.LED_7 = 0;
-  _schalterWand.r2_.LED_8 = 0;
+  _schalterWand.reg_.r3_.LED_1 = 1;
+  _schalterWand.reg_.r3_.LED_2 = 0;
+  _schalterWand.reg_.r2_.LED_3 = 0;
+  _schalterWand.reg_.r2_.LED_4 = 0;
+  _schalterWand.reg_.r3_.LED_5 = 0;
+  _schalterWand.reg_.r3_.LED_6 = 0;
+  _schalterWand.reg_.r2_.LED_7 = 0;
+  _schalterWand.reg_.r2_.LED_8 = 0;
   
   while(true) {           
     Serial.print("SW1: ");   Serial.print(_schalterWand.sw1_.readPosStr());   Serial.print(", ");
