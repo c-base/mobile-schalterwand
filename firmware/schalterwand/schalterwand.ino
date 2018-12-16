@@ -268,6 +268,8 @@ public:
 
   }
 
+  void setLed(int id, bool enable);
+
   // TODO: make private:
   Sw1 sw1_;
   Sw2 sw2_;
@@ -289,6 +291,19 @@ private:
   
 };
 
+void SchalterWand::setLed(int id, bool enable) {
+  switch(id) {
+    case 1: reg_.r3_.LED_1 = enable ? 1 : 0;
+    case 2: reg_.r3_.LED_2 = enable ? 1 : 0;
+    case 3: reg_.r2_.LED_3 = enable ? 1 : 0;
+    case 4: reg_.r2_.LED_4 = enable ? 1 : 0;
+    case 5: reg_.r3_.LED_5 = enable ? 1 : 0;
+    case 6: reg_.r3_.LED_6 = enable ? 1 : 0;
+    case 7: reg_.r2_.LED_7 = enable ? 1 : 0;
+    case 8: reg_.r2_.LED_8 = enable ? 1 : 0;
+  }
+}
+
 void setup() {
   pinMode(BL1, INPUT);
   pinMode(BL2, INPUT);
@@ -303,14 +318,14 @@ void setup() {
 SchalterWand _schalterWand;
 
 void loop() {
-  _schalterWand.reg_.r3_.LED_1 = 1;
-  _schalterWand.reg_.r3_.LED_2 = 0;
-  _schalterWand.reg_.r2_.LED_3 = 0;
-  _schalterWand.reg_.r2_.LED_4 = 0;
-  _schalterWand.reg_.r3_.LED_5 = 0;
-  _schalterWand.reg_.r3_.LED_6 = 0;
-  _schalterWand.reg_.r2_.LED_7 = 0;
-  _schalterWand.reg_.r2_.LED_8 = 0;
+  _schalterWand.setLed(1, true);
+  _schalterWand.setLed(2, false);
+  _schalterWand.setLed(3, false);
+  _schalterWand.setLed(4, false);
+  _schalterWand.setLed(5, false);
+  _schalterWand.setLed(6, false);
+  _schalterWand.setLed(7, false);
+  _schalterWand.setLed(8, false);
   
   while(true) {           
     Serial.print("SW1: ");   Serial.print(_schalterWand.sw1_.readPosStr());   Serial.print(", ");
