@@ -116,7 +116,7 @@ const char* Switch::posToString(Position pos) {
   switch(pos) {
     case Switch::Position::Down: return "Down";
     case Switch::Position::Up: return "Up";
-    case Switch::Position::LeftOrRight: "Left or Right";
+    case Switch::Position::LeftOrRight: return "Left or Right";
 
     default: return "Invalid";
   }
