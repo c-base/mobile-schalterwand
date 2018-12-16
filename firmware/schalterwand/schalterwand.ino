@@ -26,34 +26,6 @@
 #define readBrownWire(Y, Br, Bl) readWire(Y, Br, Bl, 0, 1)
 #define readYellowWire(Y, Br, Bl) readWire(Y, Br, Bl, 1, 0)
 
-struct R1 {
-  uint8_t
-          : 1,
-  Br2 : 1,
-  Y1   : 1;
-};
-
-struct R2 {
-  uint8_t
-  LED_4 : 1,
-  LED_3 : 1,
-  LED_8 : 1,
-  LED_7 : 1,
-  Y2        : 1,
-  Y3        : 1,
-  Br3      : 1,
-  Br1      : 1;
-};
-
-struct R3 {
-  uint8_t
-  LED_2 : 1,
-  LED_5 : 1,
-  LED_6 :  1,
-              :  1,
-  LED_1 : 1;
-};
-
 //------------------------------------------
 // Registers
 //------------------------------------------
@@ -62,9 +34,33 @@ class Registers {
 public:
   void write();
 
-  R1 r1_;
-  R2 r2_;
-  R3 r3_;
+  struct {
+    uint8_t
+            : 1,
+    Br2 : 1,
+    Y1   : 1;
+  } r1_;
+
+  struct  {
+    uint8_t
+    LED_4 : 1,
+    LED_3 : 1,
+    LED_8 : 1,
+    LED_7 : 1,
+    Y2        : 1,
+    Y3        : 1,
+    Br3      : 1,
+    Br1      : 1;
+  } r2_;
+
+  struct {
+    uint8_t
+    LED_2 : 1,
+    LED_5 : 1,
+    LED_6 :  1,
+                :  1,
+    LED_1 : 1;
+  } r3_;
 };
 
 void Registers::write() {
@@ -97,7 +93,7 @@ public:
 
   Switch(Registers* pReg) : pReg_(pReg) { }
   Switch::Position readPos();
-  const char* readPosStr();
+  static const char* posToString(Position pos);
 
 protected:
   Registers* const pReg_; // TODO: make private
@@ -116,8 +112,8 @@ Switch::Position Switch::readPos() {
     return Position::LeftOrRight;
 }
 
-const char* Switch::readPosStr() {
-  switch(readPos()) {
+const char* Switch::posToString(Position pos) {
+  switch(pos) {
     case Switch::Position::Down: return "Down";
     case Switch::Position::Up: return "Up";
     case Switch::Position::LeftOrRight: "Left or Right";
@@ -250,9 +246,12 @@ private:
 // SchalterWand
 //------------------------------------------
 
+typedef void (*OnSwitchPositionChange)(int id, Switch::Position pos);
+
 class SchalterWand {
 public:
-  SchalterWand() :
+  SchalterWand(OnSwitchPositionChange onSwitchPositionChange) :
+    onSwitchPositionChange_(onSwitchPositionChange),    
     sw1_(&reg_),
     sw2_(&reg_),
     sw3_(&reg_),
@@ -269,6 +268,7 @@ public:
   }
 
   void setLed(int id, bool enable);
+  void readSwitches();
 
   // TODO: make private:
   Sw1 sw1_;
@@ -287,8 +287,8 @@ public:
   Registers reg_;
   // --
   
-private:  
-  
+private:
+  OnSwitchPositionChange onSwitchPositionChange_;  
 };
 
 void SchalterWand::setLed(int id, bool enable) {
@@ -304,6 +304,21 @@ void SchalterWand::setLed(int id, bool enable) {
   }
 }
 
+void SchalterWand::readSwitches() {
+  // TODO: read all switches and call callback on state change
+
+  onSwitchPositionChange_(1, Switch::Position::Up);
+}
+
+void onSwitchPositionChange(int id, Switch::Position pos) {
+  Serial.print("SW");
+  Serial.print(id);
+  Serial.print(": ");
+  Serial.println(Switch::posToString(pos));
+}
+
+SchalterWand _schalterWand(onSwitchPositionChange);
+
 void setup() {
   pinMode(BL1, INPUT);
   pinMode(BL2, INPUT);
@@ -312,12 +327,8 @@ void setup() {
   pinMode(LATCH, OUTPUT);
 
   Serial.begin(115200);
-  SPI.begin();  
-}
+  SPI.begin();
 
-SchalterWand _schalterWand;
-
-void loop() {
   _schalterWand.setLed(1, true);
   _schalterWand.setLed(2, false);
   _schalterWand.setLed(3, false);
@@ -326,19 +337,21 @@ void loop() {
   _schalterWand.setLed(6, false);
   _schalterWand.setLed(7, false);
   _schalterWand.setLed(8, false);
-  
-  while(true) {           
-    Serial.print("SW1: ");   Serial.print(_schalterWand.sw1_.readPosStr());   Serial.print(", ");
-    Serial.print("SW2: ");   Serial.print(_schalterWand.sw2_.readPosStr());   Serial.print(", ");
-    Serial.print("SW3: ");   Serial.print(_schalterWand.sw3_.readPosStr());   Serial.print(", ");
-    Serial.print("SW4: ");   Serial.print(_schalterWand.sw4_.readPosStr());   Serial.print(", ");
-    Serial.print("SW5: ");   Serial.print(_schalterWand.sw5_.readPosStr());   Serial.print(", ");
-    Serial.print("SW6: ");   Serial.print(_schalterWand.sw6_.readPosStr());   Serial.print(", ");
-    Serial.print("SW7: ");   Serial.print(_schalterWand.sw7_.readPosStr());   Serial.print(", ");
-    Serial.print("SW8: ");   Serial.print(_schalterWand.sw8_.readPosStr());   Serial.print(", ");
-    Serial.print("SW9: ");   Serial.print(_schalterWand.sw9_.readPosStr());   Serial.print(", ");
-    Serial.print("SW10: "); Serial.print(_schalterWand.sw10_.readPosStr()); Serial.print(", ");
-    Serial.print("SW11: "); Serial.print(_schalterWand.sw11_.readPosStr()); Serial.print(", ");
-    Serial.print("SW12: "); Serial.print(_schalterWand.sw12_.readPosStr()); Serial.print(", ");
-  }
+}
+
+void loop() {
+  /*
+    Serial.print("SW1: ");   Serial.print(Switch::posToString(_schalterWand.sw1_.readPos()));   Serial.print(", ");
+    Serial.print("SW2: ");   Serial.print(Switch::posToString(_schalterWand.sw2_.readPos()));   Serial.print(", ");
+    Serial.print("SW3: ");   Serial.print(Switch::posToString(_schalterWand.sw3_.readPos()));   Serial.print(", ");
+    Serial.print("SW4: ");   Serial.print(Switch::posToString(_schalterWand.sw4_.readPos()));   Serial.print(", ");
+    Serial.print("SW5: ");   Serial.print(Switch::posToString(_schalterWand.sw5_.readPos()));   Serial.print(", ");
+    Serial.print("SW6: ");   Serial.print(Switch::posToString(_schalterWand.sw6_.readPos()));   Serial.print(", ");
+    Serial.print("SW7: ");   Serial.print(Switch::posToString(_schalterWand.sw7_.readPos()));   Serial.print(", ");
+    Serial.print("SW8: ");   Serial.print(Switch::posToString(_schalterWand.sw8_.readPos()));   Serial.print(", ");
+    Serial.print("SW9: ");   Serial.print(Switch::posToString(_schalterWand.sw9_.readPos()));   Serial.print(", ");
+    Serial.print("SW10: "); Serial.print(Switch::posToString(_schalterWand.sw10_.readPos())); Serial.print(", ");
+    Serial.print("SW11: "); Serial.print(Switch::posToString(_schalterWand.sw11_.readPos())); Serial.print(", ");
+    Serial.print("SW12: "); Serial.print(Switch::posToString(_schalterWand.sw12_.readPos())); Serial.print(", ");
+  */
 }
