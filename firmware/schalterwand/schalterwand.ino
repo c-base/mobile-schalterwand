@@ -78,6 +78,11 @@ void Registers::write() {
   delay(10);
 }
 
+struct WireStates {
+  bool brown;
+  bool yellow;
+};
+
 //------------------------------------------
 // Switch
 //------------------------------------------
@@ -99,14 +104,15 @@ protected:
   Registers* const pReg_; // TODO: make private
   
 private:
-  virtual bool brown() = 0;
-  virtual bool yellow() = 0;
+  virtual WireStates getWireStates() = 0;
 };
 
 Switch::Position Switch::readPos() {
-  if(brown())
+  WireStates states = getWireStates();
+
+  if(states.brown)
     return Position::Down;
-  else if (yellow())
+  else if (states.yellow)
     return Position::Up;
   else
     return Position::LeftOrRight;
@@ -128,8 +134,13 @@ public:
   Sw1(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL4); }
-  virtual bool yellow() final override { return readYellowWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL4); }
+  virtual WireStates getWireStates() final override {
+    WireStates states;
+    states.brown = readBrownWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL4);
+    states.yellow = readYellowWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL4);
+
+    return states;
+  };
 };
 
 // SW2: Y2, Br2, Bl4
@@ -138,8 +149,13 @@ public:
   Sw2(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL4); }
-  virtual bool yellow() final override { return readYellowWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL4); }
+  virtual WireStates getWireStates() final override {
+    WireStates states;
+    states.brown = readBrownWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL4);
+    states.yellow = readYellowWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL4);
+
+    return states;
+  };
 };
 
 // SW3: Y2, Br2, Bl3
@@ -148,8 +164,13 @@ public:
   Sw3(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL3); }
-  virtual bool yellow() final override { return readYellowWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL3); }
+  virtual WireStates getWireStates() final override {
+    WireStates states;
+    states.brown = readBrownWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL3);
+    states.yellow = readYellowWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL3);
+
+    return states;
+  };
 };
 
 // SW4: Y1, Br1, Bl3
@@ -158,8 +179,13 @@ public:
   Sw4(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL3); }
-  virtual bool yellow() final override { return readYellowWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL3); }
+  virtual WireStates getWireStates() final override {
+    WireStates states;
+    states.brown = readBrownWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL3);
+    states.yellow = readYellowWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL3);
+
+    return states;
+  };
 };
 
 // SW5: Y1, Br1, Bl1
@@ -168,8 +194,13 @@ public:
   Sw5(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL1); }
-  virtual bool yellow() final override { return readYellowWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL1); }
+  virtual WireStates getWireStates() final override {
+    WireStates states;
+    states.brown = readBrownWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL1);
+    states.yellow = readYellowWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL1);
+
+    return states;
+  };
 };
 
 // SW6: Y2, Br2, Bl1
@@ -178,8 +209,13 @@ public:
   Sw6(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL1); }
-  virtual bool yellow() final override { return readYellowWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL1); }
+  virtual WireStates getWireStates() final override {
+    WireStates states;
+    states.brown = readBrownWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL1);
+    states.yellow = readYellowWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL1);
+
+    return states;
+  };
 };
 
 // SW7: Y2, Br2, Bl2
@@ -188,8 +224,13 @@ public:
   Sw7(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL2); }
-  virtual bool yellow() final override { return readYellowWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL2); }
+  virtual WireStates getWireStates() final override {
+    WireStates states;
+    states.brown = readBrownWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL2);
+    states.yellow = readYellowWire(pReg_->r2_.Y2, pReg_->r1_.Br2, BL2);
+
+    return states;
+  };
 };
 
 // SW8: Y1, Br1, Bl2
@@ -198,8 +239,13 @@ public:
   Sw8(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL2); }
-  virtual bool yellow() final override { return readYellowWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL2); }
+  virtual WireStates getWireStates() final override {
+    WireStates states;
+    states.brown = readBrownWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL2);
+    states.yellow = readYellowWire(pReg_->r1_.Y1, pReg_->r2_.Br1, BL2);
+
+    return states;
+  };
 };
 
 // SW9: Y3, Br3, Bl1
@@ -208,8 +254,13 @@ public:
   Sw9(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL1); }
-  virtual bool yellow() final override { return readYellowWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL1); }
+  virtual WireStates getWireStates() final override {
+    WireStates states;
+    states.brown = readBrownWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL1);
+    states.yellow = readYellowWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL1);
+
+    return states;
+  };
 };
 
 // SW10: Y3, Br3, Bl4
@@ -218,8 +269,13 @@ public:
   Sw10(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL4); }
-  virtual bool yellow() final override { return readYellowWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL4); }
+  virtual WireStates getWireStates() final override {
+    WireStates states;
+    states.brown = readBrownWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL4);
+    states.yellow = readYellowWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL4);
+
+    return states;
+  };
 };
 
 // SW11: Y3, Br3, Bl3
@@ -228,8 +284,13 @@ public:
   Sw11(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL3); }
-  virtual bool yellow() final override { return readYellowWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL3); }
+  virtual WireStates getWireStates() final override {
+    WireStates states;
+    states.brown = readBrownWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL3);
+    states.yellow = readYellowWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL3);
+
+    return states;
+  };
 };
 
 // SW12, Y3, Br3, Bl2
@@ -238,8 +299,13 @@ public:
   Sw12(Registers* pReg) : Switch(pReg) {}
 
 private:
-  virtual bool brown() final override { return readBrownWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL2); }
-  virtual bool yellow() final override { return readYellowWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL2); }
+  virtual WireStates getWireStates() final override {
+    WireStates states;
+    states.brown = readBrownWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL2);
+    states.yellow = readYellowWire(pReg_->r2_.Y3, pReg_->r2_.Br3, BL2);
+
+    return states;
+  };
 };
 
 //------------------------------------------
