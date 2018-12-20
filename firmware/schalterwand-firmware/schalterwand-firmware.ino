@@ -1,10 +1,10 @@
 #include "schalterwand.h"
 
-void onSwitchPositionChange(int id, Switch::Position pos) {
+void onSwitchPositionChange(int id, SchalterWandSwitch::Position pos) {
   Serial.print("SW");
   Serial.print(id);
   Serial.print(": ");
-  Serial.println(Switch::posToString(pos));
+  Serial.println(SchalterWandSwitch::posToString(pos));
 }
 
 void setup() {

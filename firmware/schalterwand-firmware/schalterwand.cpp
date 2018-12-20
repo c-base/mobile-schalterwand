@@ -38,10 +38,10 @@
 })
 
 //------------------------------------------
-// Registers
+// SchalterWandRegisters
 //------------------------------------------
 
-void Registers::write() {
+void SchalterWandRegisters::write() {
   digitalWrite(LATCH, LOW);
   delay(10);
 
@@ -57,10 +57,10 @@ void Registers::write() {
 }
 
 //------------------------------------------
-// Switch
+// SchalterWandSwitch
 //------------------------------------------
 
-Switch::Position Switch::readPos() {
+SchalterWandSwitch::Position SchalterWandSwitch::readPos() {
   WireStates states = getWireStates();
 
   if(states.brown)
@@ -71,61 +71,61 @@ Switch::Position Switch::readPos() {
     return Position::LeftOrRight;
 }
 
-const char* Switch::posToString(Position pos) {
+const char* SchalterWandSwitch::posToString(Position pos) {
   switch(pos) {
-    case Switch::Position::Down: return "Down";
-    case Switch::Position::Up: return "Up";
-    case Switch::Position::LeftOrRight: return "Left or Right";
+    case SchalterWandSwitch::Position::Down: return "Down";
+    case SchalterWandSwitch::Position::Up: return "Up";
+    case SchalterWandSwitch::Position::LeftOrRight: return "Left or Right";
 
     default: return "Invalid";
   }
 }
 
-Switch::WireStates Sw1:: getWireStates() {
+SchalterWandSwitch::WireStates Sw1:: getWireStates() {
   return readWires(pReg_->r1_.Y1, pReg_->r2_.Br1, BL4); 
 }
 
-Switch::WireStates Sw2:: getWireStates() {
+SchalterWandSwitch::WireStates Sw2:: getWireStates() {
   return readWires(pReg_->r2_.Y2, pReg_->r1_.Br2, BL4);
 }
 
-Switch::WireStates Sw3:: getWireStates() {
+SchalterWandSwitch::WireStates Sw3:: getWireStates() {
   return readWires(pReg_->r2_.Y2, pReg_->r1_.Br2, BL3);
 }
 
-Switch::WireStates Sw4:: getWireStates() {
+SchalterWandSwitch::WireStates Sw4:: getWireStates() {
   return readWires(pReg_->r1_.Y1, pReg_->r2_.Br1, BL3);
 }
 
-Switch::WireStates Sw5:: getWireStates() {
+SchalterWandSwitch::WireStates Sw5:: getWireStates() {
   return readWires(pReg_->r1_.Y1, pReg_->r2_.Br1, BL1);
 }
 
-Switch::WireStates Sw6:: getWireStates() {
+SchalterWandSwitch::WireStates Sw6:: getWireStates() {
   return readWires(pReg_->r2_.Y2, pReg_->r1_.Br2, BL1);
 }
 
-Switch::WireStates Sw7:: getWireStates() {
+SchalterWandSwitch::WireStates Sw7:: getWireStates() {
   return readWires(pReg_->r2_.Y2, pReg_->r1_.Br2, BL2);
 }
 
-Switch::WireStates Sw8:: getWireStates() {
+SchalterWandSwitch::WireStates Sw8:: getWireStates() {
   return readWires(pReg_->r1_.Y1, pReg_->r2_.Br1, BL2);
 }
 
-Switch::WireStates Sw9:: getWireStates() {
+SchalterWandSwitch::WireStates Sw9:: getWireStates() {
   return readWires(pReg_->r2_.Y3, pReg_->r2_.Br3, BL1);
 }
 
-Switch::WireStates Sw10:: getWireStates() {
+SchalterWandSwitch::WireStates Sw10:: getWireStates() {
   return readWires(pReg_->r2_.Y3, pReg_->r2_.Br3, BL4);
 }
 
-Switch::WireStates Sw11:: getWireStates() {
+SchalterWandSwitch::WireStates Sw11:: getWireStates() {
   return readWires(pReg_->r2_.Y3, pReg_->r2_.Br3, BL3);
 }
 
-Switch::WireStates Sw12:: getWireStates() {
+SchalterWandSwitch::WireStates Sw12:: getWireStates() {
   return readWires(pReg_->r2_.Y3, pReg_->r2_.Br3, BL2);
 }
 
@@ -158,18 +158,18 @@ void SchalterWandObj::setLed(int id, bool enable) {
 }
 
 void SchalterWandObj::tick() {
-  Switch::Position sw1Cur_ = sw1.readPos();
-  Switch::Position sw2Cur_ = sw2.readPos();
-  Switch::Position sw3Cur_ = sw3.readPos();
-  Switch::Position sw4Cur_ = sw4.readPos();
-  Switch::Position sw5Cur_ = sw5.readPos();
-  Switch::Position sw6Cur_ = sw6.readPos();
-  Switch::Position sw7Cur_ = sw7.readPos();
-  Switch::Position sw8Cur_ = sw8.readPos();
-  Switch::Position sw9Cur_ = sw9.readPos();
-  Switch::Position sw10Cur_ = sw10.readPos();
-  Switch::Position sw11Cur_ = sw11.readPos();
-  Switch::Position sw12Cur_ = sw12.readPos();
+  SchalterWandSwitch::Position sw1Cur_ = sw1.readPos();
+  SchalterWandSwitch::Position sw2Cur_ = sw2.readPos();
+  SchalterWandSwitch::Position sw3Cur_ = sw3.readPos();
+  SchalterWandSwitch::Position sw4Cur_ = sw4.readPos();
+  SchalterWandSwitch::Position sw5Cur_ = sw5.readPos();
+  SchalterWandSwitch::Position sw6Cur_ = sw6.readPos();
+  SchalterWandSwitch::Position sw7Cur_ = sw7.readPos();
+  SchalterWandSwitch::Position sw8Cur_ = sw8.readPos();
+  SchalterWandSwitch::Position sw9Cur_ = sw9.readPos();
+  SchalterWandSwitch::Position sw10Cur_ = sw10.readPos();
+  SchalterWandSwitch::Position sw11Cur_ = sw11.readPos();
+  SchalterWandSwitch::Position sw12Cur_ = sw12.readPos();
 
   if (!onSwitchPositionChange_)
     return;

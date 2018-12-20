@@ -2,10 +2,10 @@
 #define _SCHALTERWAND_H
 
 //------------------------------------------
-// Registers
+// SchalterWandRegisters
 //------------------------------------------
 
-class Registers {
+class SchalterWandRegisters {
 public:
   void write();
 
@@ -39,10 +39,10 @@ public:
 };
 
 //------------------------------------------
-// Switch
+// SchalterWandSwitch
 //------------------------------------------
 
-class Switch {
+class SchalterWandSwitch {
 public:
   enum class Position {
     Invalid,
@@ -56,120 +56,120 @@ public:
     bool yellow;
   };
 
-  Switch(Registers* pReg) : pReg_(pReg) { }
-  Switch::Position readPos();
+  SchalterWandSwitch(SchalterWandRegisters* pReg) : pReg_(pReg) { }
+  SchalterWandSwitch::Position readPos();
   static const char* posToString(Position pos);
 
 protected:
-  Registers* const pReg_; // TODO: make private
+  SchalterWandRegisters* const pReg_; // TODO: make private
   
 private:
   virtual WireStates getWireStates() = 0;
 };
 
 // SW1:  Y1, Br1, Bl4
-class Sw1 : public Switch {
+class Sw1 : public SchalterWandSwitch {
 public:
-  Sw1(Registers* pReg) : Switch(pReg) {}
+  Sw1(SchalterWandRegisters* pReg) : SchalterWandSwitch(pReg) {}
 
 private:
   virtual WireStates getWireStates() final override;
 };
 
 // SW2: Y2, Br2, Bl4
-class Sw2 : public Switch {
+class Sw2 : public SchalterWandSwitch {
 public:
-  Sw2(Registers* pReg) : Switch(pReg) {}
+  Sw2(SchalterWandRegisters* pReg) : SchalterWandSwitch(pReg) {}
 
 private:
   virtual WireStates getWireStates() final override;
 };
 
 // SW3: Y2, Br2, Bl3
-class Sw3 : public Switch {
+class Sw3 : public SchalterWandSwitch {
 public:
-  Sw3(Registers* pReg) : Switch(pReg) {}
+  Sw3(SchalterWandRegisters* pReg) : SchalterWandSwitch(pReg) {}
 
 private:
   virtual WireStates getWireStates() final override;
 };
 
 // SW4: Y1, Br1, Bl3
-class Sw4 : public Switch {
+class Sw4 : public SchalterWandSwitch {
 public:
-  Sw4(Registers* pReg) : Switch(pReg) {}
+  Sw4(SchalterWandRegisters* pReg) : SchalterWandSwitch(pReg) {}
 
 private:
   virtual WireStates getWireStates() final override;
 };
 
 // SW5: Y1, Br1, Bl1
-class Sw5 : public Switch {
+class Sw5 : public SchalterWandSwitch {
 public:
-  Sw5(Registers* pReg) : Switch(pReg) {}
+  Sw5(SchalterWandRegisters* pReg) : SchalterWandSwitch(pReg) {}
 
 private:
   virtual WireStates getWireStates() final override;
 };
 
 // SW6: Y2, Br2, Bl1
-class Sw6 : public Switch {
+class Sw6 : public SchalterWandSwitch {
 public:
-  Sw6(Registers* pReg) : Switch(pReg) {}
+  Sw6(SchalterWandRegisters* pReg) : SchalterWandSwitch(pReg) {}
 
 private:
   virtual WireStates getWireStates() final override;
 };
 
 // SW7: Y2, Br2, Bl2
-class Sw7 : public Switch {
+class Sw7 : public SchalterWandSwitch {
 public:
-  Sw7(Registers* pReg) : Switch(pReg) {}
+  Sw7(SchalterWandRegisters* pReg) : SchalterWandSwitch(pReg) {}
 
 private:
   virtual WireStates getWireStates() final override;
 };
 
 // SW8: Y1, Br1, Bl2
-class Sw8 : public Switch {
+class Sw8 : public SchalterWandSwitch {
 public:
-  Sw8(Registers* pReg) : Switch(pReg) {}
+  Sw8(SchalterWandRegisters* pReg) : SchalterWandSwitch(pReg) {}
 
 private:  
   virtual WireStates getWireStates() final override;
 };
 
 // SW9: Y3, Br3, Bl1
-class Sw9 : public Switch {
+class Sw9 : public SchalterWandSwitch {
 public:
-  Sw9(Registers* pReg) : Switch(pReg) {}
+  Sw9(SchalterWandRegisters* pReg) : SchalterWandSwitch(pReg) {}
 
 private:
   virtual WireStates getWireStates() final override;
 };
 
 // SW10: Y3, Br3, Bl4
-class Sw10 : public Switch {
+class Sw10 : public SchalterWandSwitch {
 public:
-  Sw10(Registers* pReg) : Switch(pReg) {}
+  Sw10(SchalterWandRegisters* pReg) : SchalterWandSwitch(pReg) {}
 
 private:
   virtual WireStates getWireStates() final override;
 };
 
 // SW11: Y3, Br3, Bl3
-class Sw11 : public Switch {
+class Sw11 : public SchalterWandSwitch {
 public:
-  Sw11(Registers* pReg) : Switch(pReg) {}
+  Sw11(SchalterWandRegisters* pReg) : SchalterWandSwitch(pReg) {}
 
 private:
   virtual WireStates getWireStates() final override;
 };
 
 // SW12, Y3, Br3, Bl2
-class Sw12 : public Switch {
+class Sw12 : public SchalterWandSwitch {
 public:
-  Sw12(Registers* pReg) : Switch(pReg) {}
+  Sw12(SchalterWandRegisters* pReg) : SchalterWandSwitch(pReg) {}
 
 private:
   virtual WireStates getWireStates() final override;
@@ -179,7 +179,7 @@ private:
 // SchalterWandObj
 //------------------------------------------
 
-typedef void (*OnSwitchPositionChange)(int id, Switch::Position pos);
+typedef void (*OnSwitchPositionChange)(int id, SchalterWandSwitch::Position pos);
 
 class SchalterWandObj {
 public:
@@ -197,18 +197,18 @@ public:
       sw11(&reg_),
       sw12(&reg_) {
 
-    Switch::Position sw1Last_ = sw1.readPos();
-    Switch::Position sw2Last_ = sw2.readPos();
-    Switch::Position sw3Last_ = sw3.readPos();
-    Switch::Position sw4Last_ = sw4.readPos();
-    Switch::Position sw5Last_ = sw5.readPos();
-    Switch::Position sw6Last_ = sw6.readPos();
-    Switch::Position sw7Last_ = sw7.readPos();
-    Switch::Position sw8Last_ = sw8.readPos();
-    Switch::Position sw9Last_ = sw9.readPos();
-    Switch::Position sw10Last_= sw10.readPos();
-    Switch::Position sw11Last_= sw11.readPos();
-    Switch::Position sw12Last_= sw12.readPos();
+    SchalterWandSwitch::Position sw1Last_ = sw1.readPos();
+    SchalterWandSwitch::Position sw2Last_ = sw2.readPos();
+    SchalterWandSwitch::Position sw3Last_ = sw3.readPos();
+    SchalterWandSwitch::Position sw4Last_ = sw4.readPos();
+    SchalterWandSwitch::Position sw5Last_ = sw5.readPos();
+    SchalterWandSwitch::Position sw6Last_ = sw6.readPos();
+    SchalterWandSwitch::Position sw7Last_ = sw7.readPos();
+    SchalterWandSwitch::Position sw8Last_ = sw8.readPos();
+    SchalterWandSwitch::Position sw9Last_ = sw9.readPos();
+    SchalterWandSwitch::Position sw10Last_= sw10.readPos();
+    SchalterWandSwitch::Position sw11Last_= sw11.readPos();
+    SchalterWandSwitch::Position sw12Last_= sw12.readPos();
   }
 
   void begin(OnSwitchPositionChange onSwitchPositionChange);
@@ -229,20 +229,20 @@ public:
   Sw12 sw12;
     
 private:
-  Registers reg_;
+  SchalterWandRegisters reg_;
 
-  Switch::Position sw1Last_;
-  Switch::Position sw2Last_;
-  Switch::Position sw3Last_;
-  Switch::Position sw4Last_;
-  Switch::Position sw5Last_;
-  Switch::Position sw6Last_;
-  Switch::Position sw7Last_;
-  Switch::Position sw8Last_;
-  Switch::Position sw9Last_;
-  Switch::Position sw10Last_;
-  Switch::Position sw11Last_;
-  Switch::Position sw12Last_;
+  SchalterWandSwitch::Position sw1Last_;
+  SchalterWandSwitch::Position sw2Last_;
+  SchalterWandSwitch::Position sw3Last_;
+  SchalterWandSwitch::Position sw4Last_;
+  SchalterWandSwitch::Position sw5Last_;
+  SchalterWandSwitch::Position sw6Last_;
+  SchalterWandSwitch::Position sw7Last_;
+  SchalterWandSwitch::Position sw8Last_;
+  SchalterWandSwitch::Position sw9Last_;
+  SchalterWandSwitch::Position sw10Last_;
+  SchalterWandSwitch::Position sw11Last_;
+  SchalterWandSwitch::Position sw12Last_;
   OnSwitchPositionChange onSwitchPositionChange_{nullptr};
 };
 
