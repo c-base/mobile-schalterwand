@@ -176,15 +176,14 @@ private:
 };
 
 //------------------------------------------
-// SchalterWand
+// SchalterWandObj
 //------------------------------------------
 
 typedef void (*OnSwitchPositionChange)(int id, Switch::Position pos);
 
-class SchalterWand {
+class SchalterWandObj {
 public:
-  SchalterWand(OnSwitchPositionChange onSwitchPositionChange) :
-      onSwitchPositionChange_(onSwitchPositionChange),
+  SchalterWandObj() :
       sw1_(&reg_),
       sw2_(&reg_),
       sw3_(&reg_),
@@ -212,7 +211,7 @@ public:
     Switch::Position sw12Last_= sw12_.readPos();
   }
 
-  static void begin();
+  void begin(OnSwitchPositionChange onSwitchPositionChange);
   void setLed(int id, bool enable);
   void readSwitches();
     
@@ -243,7 +242,9 @@ private:
   Switch::Position sw10Last_;
   Switch::Position sw11Last_;
   Switch::Position sw12Last_;
-  OnSwitchPositionChange onSwitchPositionChange_;  
+  OnSwitchPositionChange onSwitchPositionChange_{nullptr};
 };
+
+extern SchalterWandObj SchalterWand;
 
 #endif // !_SCHALTERWAND_H

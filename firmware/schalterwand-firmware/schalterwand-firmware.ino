@@ -7,24 +7,22 @@ void onSwitchPositionChange(int id, Switch::Position pos) {
   Serial.println(Switch::posToString(pos));
 }
 
-SchalterWand _schalterWand(onSwitchPositionChange);
-
-void setup() {  
+void setup() {
   Serial.begin(115200);
-  SchalterWand::begin(); // TODO: use dot notation like in Serial library
+  SchalterWand.begin(onSwitchPositionChange);
   
-  _schalterWand.setLed(1, true);
-  _schalterWand.setLed(2, false);
-  _schalterWand.setLed(3, false);
-  _schalterWand.setLed(4, false);
-  _schalterWand.setLed(5, false);
-  _schalterWand.setLed(6, false);
-  _schalterWand.setLed(7, false);
-  _schalterWand.setLed(8, false);
+  SchalterWand.setLed(1, true);
+  SchalterWand.setLed(2, false);
+  SchalterWand.setLed(3, false);
+  SchalterWand.setLed(4, false);
+  SchalterWand.setLed(5, false);
+  SchalterWand.setLed(6, false);
+  SchalterWand.setLed(7, false);
+  SchalterWand.setLed(8, false);
 }
 
 void loop() {
-  _schalterWand.readSwitches();
+  SchalterWand.readSwitches();
 
   /*
     Serial.print("SW1: ");   Serial.print(Switch::posToString(_schalterWand.sw1_.readPos()));   Serial.print(", ");

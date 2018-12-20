@@ -130,19 +130,21 @@ WireStates Sw12:: getWireStates() {
 }
 
 //------------------------------------------
-// SchalterWand
+// SchalterWandObj
 //------------------------------------------
 
-void SchalterWand::begin() {  
+void SchalterWandObj::begin(OnSwitchPositionChange onSwitchPositionChange) {
   pinMode(BL1, INPUT);
   pinMode(BL2, INPUT);
   pinMode(BL3, INPUT);
   pinMode(BL4, INPUT);  
   pinMode(LATCH, OUTPUT);
   SPI.begin();
+
+  onSwitchPositionChange_ = onSwitchPositionChange;
 }
 
-void SchalterWand::setLed(int id, bool enable) {
+void SchalterWandObj::setLed(int id, bool enable) {
   switch(id) {
     case 1: reg_.r3_.LED_1 = enable ? 1 : 0;
     case 2: reg_.r3_.LED_2 = enable ? 1 : 0;
@@ -155,7 +157,7 @@ void SchalterWand::setLed(int id, bool enable) {
   }
 }
 
-void SchalterWand::readSwitches() {
+void SchalterWandObj::readSwitches() {
   Switch::Position sw1Cur_ = sw1_.readPos();
   Switch::Position sw2Cur_ = sw2_.readPos();
   Switch::Position sw3Cur_ = sw3_.readPos();
@@ -168,6 +170,9 @@ void SchalterWand::readSwitches() {
   Switch::Position sw10Cur_ = sw10_.readPos();
   Switch::Position sw11Cur_ = sw11_.readPos();
   Switch::Position sw12Cur_ = sw12_.readPos();
+
+  if (!onSwitchPositionChange_)
+    return;
 
   if (sw1Cur_   != sw1Last_)   onSwitchPositionChange_(1, sw1Cur_);
   if (sw2Cur_   != sw2Last_)   onSwitchPositionChange_(2, sw2Cur_);
@@ -182,3 +187,7 @@ void SchalterWand::readSwitches() {
   if (sw11Cur_ != sw11Last_) onSwitchPositionChange_(11, sw11Cur_);
   if (sw12Cur_ != sw12Last_) onSwitchPositionChange_(12, sw12Cur_);
 }
+
+#ifdef _SCHALTERWAND_H
+SchalterWandObj SchalterWand;
+#endif // _SCHALTERWAND_H
