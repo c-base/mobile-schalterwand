@@ -155,6 +155,8 @@ void SchalterWandObj::setLed(int id, bool enable) {
     case 7: reg_.r2_.LED_7 = enable ? 1 : 0;
     case 8: reg_.r2_.LED_8 = enable ? 1 : 0;
   }
+
+  reg_.write();
 }
 
 void SchalterWandObj::tick() {
