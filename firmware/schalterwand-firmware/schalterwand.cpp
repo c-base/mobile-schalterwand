@@ -81,51 +81,51 @@ const char* Switch::posToString(Position pos) {
   }
 }
 
-WireStates Sw1:: getWireStates() {
+Switch::WireStates Sw1:: getWireStates() {
   return readWires(pReg_->r1_.Y1, pReg_->r2_.Br1, BL4); 
 }
 
-WireStates Sw2:: getWireStates() {
+Switch::WireStates Sw2:: getWireStates() {
   return readWires(pReg_->r2_.Y2, pReg_->r1_.Br2, BL4);
 }
 
-WireStates Sw3:: getWireStates() {
+Switch::WireStates Sw3:: getWireStates() {
   return readWires(pReg_->r2_.Y2, pReg_->r1_.Br2, BL3);
 }
 
-WireStates Sw4:: getWireStates() {
+Switch::WireStates Sw4:: getWireStates() {
   return readWires(pReg_->r1_.Y1, pReg_->r2_.Br1, BL3);
 }
 
-WireStates Sw5:: getWireStates() {
+Switch::WireStates Sw5:: getWireStates() {
   return readWires(pReg_->r1_.Y1, pReg_->r2_.Br1, BL1);
 }
 
-WireStates Sw6:: getWireStates() {
+Switch::WireStates Sw6:: getWireStates() {
   return readWires(pReg_->r2_.Y2, pReg_->r1_.Br2, BL1);
 }
 
-WireStates Sw7:: getWireStates() {
+Switch::WireStates Sw7:: getWireStates() {
   return readWires(pReg_->r2_.Y2, pReg_->r1_.Br2, BL2);
 }
 
-WireStates Sw8:: getWireStates() {
+Switch::WireStates Sw8:: getWireStates() {
   return readWires(pReg_->r1_.Y1, pReg_->r2_.Br1, BL2);
 }
 
-WireStates Sw9:: getWireStates() {
+Switch::WireStates Sw9:: getWireStates() {
   return readWires(pReg_->r2_.Y3, pReg_->r2_.Br3, BL1);
 }
 
-WireStates Sw10:: getWireStates() {
+Switch::WireStates Sw10:: getWireStates() {
   return readWires(pReg_->r2_.Y3, pReg_->r2_.Br3, BL4);
 }
 
-WireStates Sw11:: getWireStates() {
+Switch::WireStates Sw11:: getWireStates() {
   return readWires(pReg_->r2_.Y3, pReg_->r2_.Br3, BL3);
 }
 
-WireStates Sw12:: getWireStates() {
+Switch::WireStates Sw12:: getWireStates() {
   return readWires(pReg_->r2_.Y3, pReg_->r2_.Br3, BL2);
 }
 

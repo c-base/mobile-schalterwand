@@ -38,11 +38,6 @@ public:
   } r3_;
 };
 
-struct WireStates {
-  bool brown;
-  bool yellow;
-};
-
 //------------------------------------------
 // Switch
 //------------------------------------------
@@ -54,6 +49,11 @@ public:
     LeftOrRight,
     Down,
     Up,
+  };
+
+  struct WireStates {
+    bool brown;
+    bool yellow;
   };
 
   Switch(Registers* pReg) : pReg_(pReg) { }
