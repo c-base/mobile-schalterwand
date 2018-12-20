@@ -158,18 +158,18 @@ void SchalterWandObj::setLed(int id, bool enable) {
 }
 
 void SchalterWandObj::readSwitches() {
-  Switch::Position sw1Cur_ = sw1_.readPos();
-  Switch::Position sw2Cur_ = sw2_.readPos();
-  Switch::Position sw3Cur_ = sw3_.readPos();
-  Switch::Position sw4Cur_ = sw4_.readPos();
-  Switch::Position sw5Cur_ = sw5_.readPos();
-  Switch::Position sw6Cur_ = sw6_.readPos();
-  Switch::Position sw7Cur_ = sw7_.readPos();
-  Switch::Position sw8Cur_ = sw8_.readPos();
-  Switch::Position sw9Cur_ = sw9_.readPos();
-  Switch::Position sw10Cur_ = sw10_.readPos();
-  Switch::Position sw11Cur_ = sw11_.readPos();
-  Switch::Position sw12Cur_ = sw12_.readPos();
+  Switch::Position sw1Cur_ = sw1.readPos();
+  Switch::Position sw2Cur_ = sw2.readPos();
+  Switch::Position sw3Cur_ = sw3.readPos();
+  Switch::Position sw4Cur_ = sw4.readPos();
+  Switch::Position sw5Cur_ = sw5.readPos();
+  Switch::Position sw6Cur_ = sw6.readPos();
+  Switch::Position sw7Cur_ = sw7.readPos();
+  Switch::Position sw8Cur_ = sw8.readPos();
+  Switch::Position sw9Cur_ = sw9.readPos();
+  Switch::Position sw10Cur_ = sw10.readPos();
+  Switch::Position sw11Cur_ = sw11.readPos();
+  Switch::Position sw12Cur_ = sw12.readPos();
 
   if (!onSwitchPositionChange_)
     return;
@@ -189,5 +189,5 @@ void SchalterWandObj::readSwitches() {
 }
 
 #ifdef _SCHALTERWAND_H
-SchalterWandObj SchalterWand;
+  SchalterWandObj SchalterWand;
 #endif // _SCHALTERWAND_H

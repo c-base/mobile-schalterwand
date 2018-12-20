@@ -184,51 +184,52 @@ typedef void (*OnSwitchPositionChange)(int id, Switch::Position pos);
 class SchalterWandObj {
 public:
   SchalterWandObj() :
-      sw1_(&reg_),
-      sw2_(&reg_),
-      sw3_(&reg_),
-      sw4_(&reg_),
-      sw5_(&reg_),
-      sw6_(&reg_),
-      sw7_(&reg_),
-      sw8_(&reg_),
-      sw9_(&reg_),
-      sw10_(&reg_),
-      sw11_(&reg_),
-      sw12_(&reg_) {
+      sw1(&reg_),
+      sw2(&reg_),
+      sw3(&reg_),
+      sw4(&reg_),
+      sw5(&reg_),
+      sw6(&reg_),
+      sw7(&reg_),
+      sw8(&reg_),
+      sw9(&reg_),
+      sw10(&reg_),
+      sw11(&reg_),
+      sw12(&reg_) {
 
-    Switch::Position sw1Last_ = sw1_.readPos();
-    Switch::Position sw2Last_ = sw2_.readPos();
-    Switch::Position sw3Last_ = sw3_.readPos();
-    Switch::Position sw4Last_ = sw4_.readPos();
-    Switch::Position sw5Last_ = sw5_.readPos();
-    Switch::Position sw6Last_ = sw6_.readPos();
-    Switch::Position sw7Last_ = sw7_.readPos();
-    Switch::Position sw8Last_ = sw8_.readPos();
-    Switch::Position sw9Last_ = sw9_.readPos();
-    Switch::Position sw10Last_= sw10_.readPos();
-    Switch::Position sw11Last_= sw11_.readPos();
-    Switch::Position sw12Last_= sw12_.readPos();
+    Switch::Position sw1Last_ = sw1.readPos();
+    Switch::Position sw2Last_ = sw2.readPos();
+    Switch::Position sw3Last_ = sw3.readPos();
+    Switch::Position sw4Last_ = sw4.readPos();
+    Switch::Position sw5Last_ = sw5.readPos();
+    Switch::Position sw6Last_ = sw6.readPos();
+    Switch::Position sw7Last_ = sw7.readPos();
+    Switch::Position sw8Last_ = sw8.readPos();
+    Switch::Position sw9Last_ = sw9.readPos();
+    Switch::Position sw10Last_= sw10.readPos();
+    Switch::Position sw11Last_= sw11.readPos();
+    Switch::Position sw12Last_= sw12.readPos();
   }
 
   void begin(OnSwitchPositionChange onSwitchPositionChange);
   void setLed(int id, bool enable);
   void readSwitches();
+
+  Sw1 sw1;
+  Sw2 sw2;
+  Sw3 sw3;
+  Sw4 sw4;
+  Sw5 sw5;
+  Sw6 sw6;
+  Sw7 sw7;
+  Sw8 sw8;
+  Sw9 sw9;
+  Sw10 sw10;
+  Sw11 sw11;
+  Sw12 sw12;
     
 private:
   Registers reg_;
-  Sw1 sw1_;
-  Sw2 sw2_;
-  Sw3 sw3_;
-  Sw4 sw4_;
-  Sw5 sw5_;
-  Sw6 sw6_;
-  Sw7 sw7_;
-  Sw8 sw8_;
-  Sw9 sw9_;
-  Sw10 sw10_;
-  Sw11 sw11_;
-  Sw12 sw12_;
 
   Switch::Position sw1Last_;
   Switch::Position sw2Last_;
