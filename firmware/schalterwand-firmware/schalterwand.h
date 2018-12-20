@@ -213,7 +213,7 @@ public:
 
   void begin(OnSwitchPositionChange onSwitchPositionChange);
   void setLed(int id, bool enable);
-  void readSwitches();
+  void tick();
 
   Sw1 sw1;
   Sw2 sw2;

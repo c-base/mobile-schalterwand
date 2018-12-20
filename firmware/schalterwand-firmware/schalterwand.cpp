@@ -157,7 +157,7 @@ void SchalterWandObj::setLed(int id, bool enable) {
   }
 }
 
-void SchalterWandObj::readSwitches() {
+void SchalterWandObj::tick() {
   Switch::Position sw1Cur_ = sw1.readPos();
   Switch::Position sw2Cur_ = sw2.readPos();
   Switch::Position sw3Cur_ = sw3.readPos();

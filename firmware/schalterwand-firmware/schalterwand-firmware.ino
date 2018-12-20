@@ -22,7 +22,7 @@ void setup() {
 }
 
 void loop() {
-  SchalterWand.readSwitches();
+  SchalterWand.tick();
 
 /*
   Serial.print("SW1: ");   Serial.print(Switch::posToString(SchalterWand.sw1.readPos()));   Serial.print(", ");
