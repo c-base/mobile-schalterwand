@@ -11,7 +11,7 @@ void setup() {
   Serial.begin(115200);
   SchalterWand.begin(onSwitchPositionChange);
   
-  SchalterWand.setLed(1, true);
+  SchalterWand.setLed(1, false);
   SchalterWand.setLed(2, false);
   SchalterWand.setLed(3, false);
   SchalterWand.setLed(4, false);
@@ -21,8 +21,15 @@ void setup() {
   SchalterWand.setLed(8, false);
 }
 
+int iLed = 0;
+
 void loop() {
   SchalterWand.tick();
+
+  SchalterWand.setLed(iLed + 1, true);
+  delay(500);
+  iLed = (iLed + 1) % 8;
+  SchalterWand.setLed(iLed + 1, false);
 
 /*
   Serial.print("SW1: ");   Serial.print(Switch::posToString(SchalterWand.sw1.readPos()));   Serial.print(", ");
